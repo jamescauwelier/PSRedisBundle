@@ -3,22 +3,26 @@
 
 namespace Sparkcentral\Bundle\PSRedisBundle\Tests;
 
-require_once realpath(__DIR__.'/../../../../../app/AppKernel.php');
+use Sparkcentral\Bundle\PSRedisBundle\DependencyInjection\SparkcentralPSRedisExtension;
+use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 abstract class KernelAwareTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \Symfony\Component\HttpKernel\AppKernel
+     * @var \Symfony\Component\DependencyInjection\Container
      */
-    protected $kernel;
+    protected $container;
 
     /**
      * @return null
      */
     public function setUp()
     {
-        $this->kernel = new \AppKernel('test', true);
-        $this->kernel->boot();
+        $this->container = new ContainerBuilder();
+
+        $extension = new SparkcentralPSRedisExtension();
+        $extension->load(array(), $this->container);
 
         parent::setUp();
     }
@@ -28,7 +32,7 @@ abstract class KernelAwareTest extends \PHPUnit_Framework_TestCase
      */
     public function tearDown()
     {
-        $this->kernel->shutdown();
+        unset($this->container);
 
         parent::tearDown();
     }

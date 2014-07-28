@@ -1,0 +1,69 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+
+        <parameter key="sparkcentral.psredis_bundle.master_discovery.configurator.class">Sparkcentral\Bundle\PSRedisBundle\MasterDiscovery\Configurator</parameter>
+        <parameter key="sparkcentral.psredis_bundle.master_discovery.class">PSRedis\MasterDiscovery</parameter>
+        <parameter key="sparkcentral.psredis_bundle.ha_client.class">PSRedis\HAClient</parameter>
+
+        <parameter key="sparkcentral.psredis_bundle.sentinels" type="collection">
+            <parameter type="collection">
+                <parameter key="address">127.0.0.1</parameter>
+                <parameter key="port">26379</parameter>
+            </parameter>
+            <parameter type="collection">
+                <parameter key="address">127.0.0.1</parameter>
+                <parameter key="port">26380</parameter>
+            </parameter>
+            <parameter type="collection">
+                <parameter key="address">127.0.0.1</parameter>
+                <parameter key="port">26381</parameter>
+            </parameter>
+        </parameter>
+
+        <parameter key="sparkcentral.psredis_bundle.master.name">redismaster</parameter>
+        <parameter key="sparkcentral.psredis_bundle.master_discovery.backoff" type="collection">
+            <parameter key="strategy">Incremental</parameter>
+            <parameter key="offset">500</parameter>
+            <parameter key="multiplier">1.5</parameter>
+            <parameter key="maximum_attempts">10</parameter>
+        </parameter>
+
+    </parameters>
+
+    <!--
+    <services>
+
+
+        <service id="sparkcentral.psredis_bundle.ha_client" class="%sparkcentral.psredis_bundle.ha_client.class%">
+            <argument type="service" id="sparkcentral.psredis_bundle.master_discovery" />
+        </service>
+    </services>
+    -->
+
+    <services>
+
+        <service id="sparkcentral.psredis_bundle.master_discovery.configurator" class="%sparkcentral.psredis_bundle.master_discovery.configurator.class%">
+            <call method="setSentinelParametersCollection">
+                <argument>%sparkcentral.psredis_bundle.sentinels%</argument>
+            </call>
+            <call method="setBackoffParameters">
+                <argument>%sparkcentral.psredis_bundle.master_discovery.backoff%</argument>
+            </call>
+        </service>
+
+        <service id="sparkcentral.psredis_bundle.master_discovery" class="%sparkcentral.psredis_bundle.master_discovery.class%">
+            <argument>%sparkcentral.psredis_bundle.master.name%</argument>
+            <configurator service="sparkcentral.psredis_bundle.master_discovery.configurator" method="configure" />
+        </service>
+
+        <service id="sparkcentral.psredis_bundle.ha_client" class="%sparkcentral.psredis_bundle.ha_client.class%">
+            <argument type="service" id="sparkcentral.psredis_bundle.master_discovery" />
+        </service>
+
+    </services>
+</container>
