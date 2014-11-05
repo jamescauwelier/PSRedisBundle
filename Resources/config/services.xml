@@ -35,16 +35,6 @@
 
     </parameters>
 
-    <!--
-    <services>
-
-
-        <service id="sparkcentral.psredis_bundle.ha_client" class="%sparkcentral.psredis_bundle.ha_client.class%">
-            <argument type="service" id="sparkcentral.psredis_bundle.master_discovery" />
-        </service>
-    </services>
-    -->
-
     <services>
 
         <service id="sparkcentral.psredis_bundle.master_discovery.configurator" class="%sparkcentral.psredis_bundle.master_discovery.configurator.class%">

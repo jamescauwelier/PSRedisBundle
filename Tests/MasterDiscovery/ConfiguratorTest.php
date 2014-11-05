@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Sparkcentral\Bundle\PSRedisBundle\Tests\MasterDiscovery;
-
 
 use PSRedis\MasterDiscovery;
 use Sparkcentral\Bundle\PSRedisBundle\Tests\KernelAwareTest;
