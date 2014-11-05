@@ -57,7 +57,7 @@ class PSRedisSessionHandler implements \SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function open($save_path, $session_id)
+    public function open($savePath, $sessionId)
     {
         return true;
     }
